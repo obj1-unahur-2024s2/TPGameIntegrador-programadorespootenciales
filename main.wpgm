@@ -1,0 +1,8 @@
+import wollok.game.*
+import nivel.*
+
+program CarGame {
+	nivel.configurate()
+
+	game.start()
+}
