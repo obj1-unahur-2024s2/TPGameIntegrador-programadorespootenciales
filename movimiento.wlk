@@ -20,12 +20,20 @@ object movimiento {
             game.schedule(500, {self.mover(derecha,visual)})
 		}
    }
-	
+	method cambiarPersonajeSegunDireccion(unPersonaje, unaDireccion){
+		const imagen = imagenNueva.imagenSegunDireccion(unaDireccion)
+		unPersonaje.cambiarImagen(imagen)
+		
+	}
 	method mover(direccion,personaje){
 		const nuevaPosicion = direccion.siguiente(personaje.position())
 		if (nuevaPosicion.x() >= 1 && nuevaPosicion.x() < game.width() - 1 &&
-				nuevaPosicion.y() >= 1 && nuevaPosicion.y() < game.height() - 1)
-		personaje.position(nuevaPosicion)
+				nuevaPosicion.y() >= 1 && nuevaPosicion.y() < game.height() - 1){
+					self.cambiarPersonajeSegunDireccion(personaje, direccion)
+					personaje.position(nuevaPosicion)
+				}
+
+		
 	}
 
 	method moverobjetos(direccion,personaje){
@@ -51,4 +59,21 @@ object abajo {
 
 object arriba { 
 	method siguiente(position) = position.up(1) 
+}
+
+object imagenNueva{
+	method imagenSegunDireccion(unaDireccion){
+		var imagen = "player.png"
+		if (unaDireccion == izquierda){
+			imagen = "autosRojoConPersonajesSinFondoALaIzquierda.png"
+		}
+		else if (unaDireccion == derecha){
+			imagen = "autosRojoConPersonajesSinFondoALaDerecha.png"
+		}
+		else if (unaDireccion == arriba){
+			imagen = "autosRojoConPersonajesSinFondoArriba.png"
+		}
+		else {imagen = "autosRojoConPersonajesSinFondoAbajo.png"}
+		return imagen
+	}
 }
