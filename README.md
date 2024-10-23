@@ -2,9 +2,10 @@
 
 ## Equipo de desarrollo
 
-- Alguien
-- Persona
-- etc.
+- CORRALES, FRANCO GABRIEL
+- DIAZ, MARCELO FABIÁN
+- FAJARDO, MARÍA EUGENIA
+- GARCIA, CAMILA MAGALÍ
 
 ## Capturas
 
@@ -17,6 +18,6 @@
 
 ## Otros
 
-- Curso/Facultad
-- Versión de wollok
+- UNAHUR - Instituto de Tecnología e Ingeniería
+- Versión de wollok: 0.2.7
 - Una vez terminado, no tenemos problemas en que el repositorio sea público / queremos manternerlo privado
