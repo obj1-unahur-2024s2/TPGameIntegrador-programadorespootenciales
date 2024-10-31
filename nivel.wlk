@@ -6,7 +6,7 @@ import autos.*
 object juego {
 	method iniciar(){		
 		game.title("Autos")
-		game.cellSize(10)
+		//game.cellSize(80)
 		game.height(10)
 		game.width(15)
 		game.boardGround("ground.png")
@@ -17,7 +17,7 @@ object juego {
 }
 object nivel {
    var distanciaNivel = 500
-   var velocidadNivel = 8000
+   var velocidadNivel = 2000
    const elementos = []
 
    method agregoElemento(unElemento) {
