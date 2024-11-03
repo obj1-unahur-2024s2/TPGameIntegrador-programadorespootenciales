@@ -5,16 +5,14 @@ import player.*
 class Auto{
 	var property position = new Position(x = [4,7,10].anyOne(), y = 9)
 
-	method inicioMovimiento(){
-	   game.onTick(300, "velocidad", {self.desplazarse()})
+	method initialize(){
+	   game.onTick(player.velocidadRelativa(), "velocidad", {self.desplazarse()})
 	}
 
 	method desplazarse(){
-		const nuevaPosicion = position.down(1) 
-		if (nuevaPosicion.y() >= 0 && nuevaPosicion.y() < game.height() - 1)
-		self.position(nuevaPosicion)
-		
-        if (nuevaPosicion.y() == 0) {
+		self.position(position.down(1))
+
+        if (self.llegue()) {
 			nivel.borrarElemento(self)
 			game.schedule(1000, {game.removeVisual(self)})
 		}
@@ -22,20 +20,22 @@ class Auto{
 		
 	}
 
+	method llegue() = position.y() == 0
+
 	method image()
 }
 class Auto1 inherits Auto {
-	override method image() = "player.png"
+	override method image() = "auto1.png"
 }
 
 class Auto2 inherits Auto {
-	override method image() = "autosRojoConPersonajesSinFondoArriba.png"
+	override method image() = "auto2.png"
 }
 
-object abajo { 
-	method siguiente(position) = position.down(1) 
+class Auto3 inherits Auto {
+	override method image() = "auto3.png"
 }
 
-object arriba { 
-	method siguiente(position) = position.up(1) 
+class Auto4 inherits Auto {
+	override method image() = "auto4.png"
 }

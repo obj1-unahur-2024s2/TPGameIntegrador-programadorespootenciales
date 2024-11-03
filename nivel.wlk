@@ -1,29 +1,29 @@
 import wollok.game.*
-import fondo.*
 import player.*
 import autos.*
 
 object juego {
 	method iniciar(){		
 		game.title("Autos")
-		//game.cellSize(80)
 		game.height(10)
 		game.width(15)
-		game.boardGround("ground.png")
+		//game.boardGround("presentacion.png")
 		player.configurarFlechas()
 		nivel.configurate()
+		keyboard.space().onPressDo({game.stop() game.addVisual(mensajeFin)})
+		game.boardGround("fondo.png")
 		game.start()
+		//keyboard.enter().onPressDo({game.boardGround("fondo.png") nivel.configurate() game.start() })
 	}	
 }
 object nivel {
    var distanciaNivel = 500
-   var velocidadNivel = 2000
+   const velocidadNivel = 2000
    const elementos = []
 
    method agregoElemento(unElemento) {
 	elementos.add(unElemento)
 	game.addVisual(unElemento)
-	unElemento.inicioMovimiento()
    }
 
    method borrarElemento(unElemento) {
@@ -31,15 +31,9 @@ object nivel {
    }
 
    method configurate(){
-	//	ARBUSTOS
 		const ancho = game.width() 
-		const largo = game.height() 
+		const largo = game.height()
 	
-		(3..11).forEach({a=> (0 .. largo).forEach { n => new Camino_liso(position = new Position(x =a, y = n)).dibujar() }}) // ruta
-        (0 .. largo).forEach { n => new Camino_izquierdo(position = new Position(x =5, y = n)).dibujar() } // bordeIzq 
-		(0 .. largo).forEach { n => new Camino_derecho(position = new Position(x =9, y = n)).dibujar() } // bordeDer
-		
-
     //	VISUALES
 	    game.addVisualCharacter(player)
 		game.addVisual(scoreVelocidad)
@@ -47,12 +41,9 @@ object nivel {
 		game.addVisual(scoreCombustible)
 		game.addVisual(scoreEstado)
 
-        game.onTick(velocidadNivel, "agrego", {self.agregoElemento([new Auto1(), new Auto2()].anyOne())})
+        game.onTick(velocidadNivel, "agrego", {self.agregoElemento([new Auto1(), new Auto2(), new Auto3(), new Auto4()].anyOne())})
 
-		//game.onTick(player.velocidadRelativa(), "movimiento1", {self.moverObjetos()})
 		game.onTick(1000, "tiempo", {
-			player.gastaCombustible()
-			player.validarEstado()
 			distanciaNivel = 0.max(distanciaNivel - player.velocidad())
 			if (distanciaNivel ==0){
 				game.addVisual(mensajeGanaste)
@@ -61,10 +52,6 @@ object nivel {
 		})
 
 	}
-
-	//method moverObjetos(){
-    //   elementos.forEach({e=>e.desplazarse() })
-	//}
 
 	method distancia() = distanciaNivel
 }
@@ -92,6 +79,7 @@ object scoreEstado{
 class Mensaje{
    method position() = game.center()
    method text()
+   method serImpactado(unAuto) {}
 }
 object mensajePerdiste inherits Mensaje{
 	override method text() = "LO SIENTO!! VOLVÉ A INTENTARLO"
@@ -99,4 +87,8 @@ object mensajePerdiste inherits Mensaje{
 
 object mensajeGanaste inherits Mensaje{
 	override method text() = "FELICITACIONES!! SUPERASTE EL NIVEL"
+}
+
+object mensajeFin inherits Mensaje{
+	override method text() = "JUEGO FINALIZADO"
 }
