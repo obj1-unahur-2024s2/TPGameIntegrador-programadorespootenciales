@@ -7,17 +7,16 @@ object juego {
 		game.title("Autos")
 		game.height(10)
 		game.width(15)
-		//game.boardGround("presentacion.png")
 		player.configurarFlechas()
-		nivel.configurate()
 		keyboard.space().onPressDo({game.stop() game.addVisual(mensajeFin)})
 		game.boardGround("fondo.png")
+		game.addVisual(inicio)
+		keyboard.enter().onPressDo({game.removeVisual(inicio) nivel.configurate()})
 		game.start()
-		//keyboard.enter().onPressDo({game.boardGround("fondo.png") nivel.configurate() game.start() })
 	}	
 }
 object nivel {
-   var distanciaNivel = 500
+   var distanciaNivel = 5000
    const velocidadNivel = 2000
    const elementos = []
 
@@ -36,10 +35,10 @@ object nivel {
 	
     //	VISUALES
 	    game.addVisualCharacter(player)
-		game.addVisual(scoreVelocidad)
-		game.addVisual(scoreDistancia)
-		game.addVisual(scoreCombustible)
-		game.addVisual(scoreEstado)
+		game.addVisual(new ScoreVelocidad())
+		game.addVisual(new ScoreDistancia())
+		game.addVisual(new ScoreCombustible())
+		game.addVisual(new ScoreEstado())
 
         game.onTick(velocidadNivel, "agrego", {self.agregoElemento([new Auto1(), new Auto2(), new Auto3(), new Auto4()].anyOne())})
 
@@ -54,29 +53,43 @@ object nivel {
 	}
 
 	method distancia() = distanciaNivel
+
+	method perdiste(){
+	    game.addVisual(mensajePerdiste)
+		game.stop()
+    }
+
+	method actualizoVelocidades(unaVelocidad){
+		elementos.forEach({auto => auto.cambioVelocidad(unaVelocidad)})
+	}
 }
 
-object scoreVelocidad{
+class Score{
+	method textColor() = "FFFFFFFF"
+	method text()
+}
+class ScoreVelocidad inherits Score{
 	method position() = game.at(13,9)
-	method text() = "VELOCIDAD: " + player.velocidad().toString()
+	override method text() = "VELOCIDAD: " + player.velocidad().toString()
 }
 
-object scoreDistancia{
+class ScoreDistancia inherits Score{
 	method position() = game.at(13,8)
-	method text() = "DISTANCIA: " + nivel.distancia().toString()
+	override method text() = "DISTANCIA: " + nivel.distancia().toString()
 }
 
-object scoreCombustible{
+class ScoreCombustible inherits Score{
 	method position() = game.at(13,7)
-	method text() = "COMBUSTIBLE: " + player.combustible().toString()
+	override method text() = "COMBUSTIBLE: " + player.combustible().toString()
 }
 
-object scoreEstado{
+class ScoreEstado inherits Score{
 	method position() = game.at(13,6)
-	method text() = "ESTADO: " + player.estado().toString()
+	override method text() = "ESTADO: " + player.estado().toString()
 }
 
 class Mensaje{
+   method textColor() = "0000FFFF"
    method position() = game.center()
    method text()
    method serImpactado(unAuto) {}
@@ -92,3 +105,11 @@ object mensajeGanaste inherits Mensaje{
 object mensajeFin inherits Mensaje{
 	override method text() = "JUEGO FINALIZADO"
 }
+
+object inicio {
+	var image = "presentacion.png"
+	var position = game.origin()
+	method position() = position
+	method image() = image
+}
+

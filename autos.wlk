@@ -9,6 +9,11 @@ class Auto{
 	   game.onTick(player.velocidadRelativa(), "velocidad", {self.desplazarse()})
 	}
 
+	method cambioVelocidad(unaVelocidad){
+		game.removeTickEvent("velocidad")
+		game.onTick(unaVelocidad, "velocidad", {self.desplazarse()})
+	}
+
 	method desplazarse(){
 		self.position(position.down(1))
 
@@ -23,6 +28,8 @@ class Auto{
 	method llegue() = position.y() == 0
 
 	method image()
+
+	method serImpactado(unAuto) {}
 }
 class Auto1 inherits Auto {
 	override method image() = "auto1.png"

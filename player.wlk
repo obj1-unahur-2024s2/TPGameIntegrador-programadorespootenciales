@@ -1,4 +1,5 @@
 import wollok.game.*
+import nivel.*
 
 object player {
 	var image = "autoPlayer.png"
@@ -16,8 +17,7 @@ object player {
 	method gastaCombustible() {
 		combustible = 0.max(combustible - 1)
 		if (combustible == 0) {
-          game.addVisual(nivel.mensajePerdiste)
-		  game.stop()
+          nivel.perdiste()
 		}
 	}
 	method velocidadRelativa() = 300 - (velocidad/2)
@@ -27,10 +27,12 @@ object player {
 
 	method acelerar() {
 		velocidad = (95 * estado /100).min(velocidad + 5)
+		nivel.actualizoVelocidades(self.velocidadRelativa())
 	}
 
 	method frenar() {
 		velocidad = 0.max(velocidad - 5)
+		nivel.actualizoVelocidades(self.velocidadRelativa())
 	}
 
 	method izquierda(){
@@ -52,7 +54,7 @@ object player {
 		velocidad = 0
 		game.say(unAuto,"Cuidado gil !!")
 		estado = 0.max(estado - 10)
-		
+		nivel.actualizoVelocidades(self.velocidadRelativa())		
 		game.schedule(1000, {game.removeVisual(unAuto) self.vuelvoOrigen()})
 	}
 
@@ -94,8 +96,7 @@ object player {
 		if (self.position().x() < 4 or self.position().x() > 10){
 			estado = 0.max(estado -1)
 			if (estado == 0) {
-              game.addVisual(nivel.mensajePerdiste)
-		      game.stop()
+              nivel.perdiste()
 		    }
 		}
 	}
