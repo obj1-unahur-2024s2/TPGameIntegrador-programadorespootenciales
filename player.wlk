@@ -5,8 +5,9 @@ object player {
 	var image = "autoPlayer.png"
 	var position = new Position(x = 7, y = 1)
 	var velocidad = 20
-	var combustible = 40
+	var combustible = 90
 	var estado = 100
+	var autosQueChoco = 0
 	
 	method velocidad() = velocidad
 	method combustible() = combustible
@@ -16,23 +17,23 @@ object player {
 	}
 	method gastaCombustible() {
 		combustible = 0.max(combustible - 1)
-		if (combustible == 0) {
-          nivel.perdiste()
-		}
+		self.combustibleEnCero()
 	}
-	method velocidadRelativa() = 300 - (velocidad/2)
+	method combustibleEnCero() = if (combustible == 0) nivel.perdiste()
+	method llegasteALaMeta() = if(nivel.distancia() == 0) nivel.ganaste()
+	method velocidadRelativa() = 10.min(300 - (velocidad/2))
 
 	method image() = image
 	method cambiarImagen(imagenNueva){ image  = imagenNueva }
 
 	method acelerar() {
 		velocidad = (95 * estado /100).min(velocidad + 5)
-		nivel.actualizoVelocidades(self.velocidadRelativa())
+		game.onTick(1000, "aceleracion", { nivel.actualizoVelocidades(self.velocidadRelativa())})
 	}
 
 	method frenar() {
 		velocidad = 0.max(velocidad - 5)
-		nivel.actualizoVelocidades(self.velocidadRelativa())
+		game.onTick(1000, "desaceleracion", { nivel.actualizoVelocidades(self.velocidadRelativa())})
 	}
 
 	method izquierda(){
@@ -49,15 +50,21 @@ object player {
 
 	method position() = position
     method position(unaPosicion){}
-
-	method serImpactado(unAuto) {
-		velocidad = 0
-		game.say(unAuto,"Cuidado gil !!")
-		estado = 0.max(estado - 10)
-		nivel.actualizoVelocidades(self.velocidadRelativa())		
-		game.schedule(1000, {game.removeVisual(unAuto) self.vuelvoOrigen()})
+	method colisiones() = autosQueChoco
+	method contarColisiones() {autosQueChoco = autosQueChoco + 1}
+	method chocar(auto){
+		game.onCollideDo(self, { auto => self.serImpactado(auto) })
 	}
+	method serImpactado(unAuto) {
+		game.say(self,"Cuidado gil !!")
+		self.contarColisiones()
+		self.actualizaEstado()
+		self.detenerse()
+		nivel.actualizoVelocidadDe(self.velocidadRelativa(), unAuto)	
+		game.schedule(500, {self.vuelvoOrigen()})
 
+	}
+	method detenerse(){velocidad = 0}
 	method vuelvoOrigen() {
 		position = game.at(7,1)
 	}
@@ -66,7 +73,7 @@ object player {
 		keyboard.up().onPressDo {
 			self.acelerar()
 		}
-
+		
 		keyboard.down().onPressDo { 
 			self.frenar()
 		}
@@ -94,12 +101,12 @@ object player {
 
 	method validarEstado(){
 		if (self.position().x() < 4 or self.position().x() > 10){
-			estado = 0.max(estado -1)
-			if (estado == 0) {
-              nivel.perdiste()
-		    }
+			estado = 0.max(estado - 1)
 		}
+		self.estadoEsCero()
 	}
+	method estadoEsCero() = if (estado == 0) nivel.perdiste() 
+	method actualizaEstado(){estado = 0.max(estado - 10)}
 }
 
 object izquierda { 

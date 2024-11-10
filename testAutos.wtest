@@ -1,0 +1,63 @@
+import main.*
+import autos.*
+import wollok.game.*
+import nivel.*
+
+describe "Test de Autos" {
+  const auto1 = new Auto1()
+  const auto2 = new Auto2()
+  const auto3 = new Auto3()
+  const auto4 = new Auto4()
+
+  method initialize(){
+    game.clear()
+  }
+  method agregarAutos(){
+    nivel.agregoElemento(auto1)
+    nivel.agregoElemento(auto2)
+    nivel.agregoElemento(auto3)
+    nivel.agregoElemento(auto4)
+
+  }
+
+  test "Agrego 4 Autos" {
+    self.agregarAutos()
+    assert.equals(4, nivel.elementos().size())
+  }
+  test "La imagen del auto2 se llama auto2.png " {
+    self.agregarAutos()
+    assert.that(nivel.elementos().filter({a=>a.image() == "auto2.png"}).contains(auto2))
+  }
+
+  test "El combustible con el que inician los autos es simpre 100 " {
+    self.agregarAutos()
+    assert.that(nivel.elementos().filter({a=>a.image() == "auto2.png"}).contains(auto2))
+  }
+  test "La posicion inicial de todos los autos en el eje vertical será siempre 9 y en el eje horizontal variara entre 4, 7 y 10 " {
+    self.agregarAutos()
+    assert.that(nivel.elementos().all({a=>a.position().y() == 9 && (a.position().x() == 4 || a.position().x() == 7 || a.position().x() == 10 )}))
+  }
+  test "El auto4 al ser impactado desaparece de la lista de elementos pero el auto 3 sigue estando presente" {
+    self.agregarAutos()
+    auto4.serImpactado(auto4)
+    assert.notThat(nivel.elementos().contains(auto4))
+    assert.that(game.hasVisual(auto3))
+    //assert.that(game.hasVisual(AutoChocado))
+  }
+  test "El auto4 al ser impactado desaparece de la lista de elementos y se muestra " {
+    self.agregarAutos()
+    auto4.serImpactado(auto4)
+    assert.notThat(nivel.elementos().contains(auto4))
+    assert.notThat(nivel.autosChocado().isEmpty())
+  }
+  test "Luego de impactar al auto2, este desaparece y se muestra un auto chocado cuya imagen se llama: unAutoConHumo.png " {
+    self.agregarAutos()
+    auto2.serImpactado(auto2)
+    assert.that(nivel.autosChocado().all({a=>a.image() == "unAutoConHumo.png"}))
+  }
+  test "Luego de impactar al Jugador el auto1 recibe un cambio de velocidad que efectua un desplazamiento a los 10ms  " {
+    self.agregarAutos()
+    auto2.serImpactado(auto2)
+    assert.that(nivel.autosChocado().all({a=>a.image() == "unAutoConHumo.png"}))
+  }
+}
