@@ -6,15 +6,7 @@
 - FAJARDO, MARÍA EUGENIA
 
 ## Capturas
-<style>
-    .contenedor-imagenes {
-    display: flex;
-    }
 
-    .contenedor-imagenes img:first-child {
-    margin-right: 10px;
-    }
-</style>
 <div class="contenedor-imagenes" >
     <img src="assets/portadaGame.png" />
     <img src="assets/pantallaNivelGame_1.png" />
@@ -46,3 +38,4 @@ Cosas a tener en cuenta:
 - UNAHUR - Instituto de Tecnología e Ingeniería
 - Versión de wollok: 0.2.7
 - Una vez terminado, queremos manternerlo privado.
+<link rel="stylesheet" href="styles/styles.css">
