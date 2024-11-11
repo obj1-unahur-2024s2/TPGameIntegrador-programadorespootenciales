@@ -30,7 +30,7 @@ class Auto{
 	method image()
 
 	method serImpactado(unAuto) {
-		game.say(unAuto,"Cuidado gil !!")
+		//game.say(unAuto,"Cuidado gil !!")  --revisar o quitar
 		const pos = unAuto.position()
 		const autoChocado = new AutoChocado(position = pos) 
 		nivel.borrarElemento(unAuto)

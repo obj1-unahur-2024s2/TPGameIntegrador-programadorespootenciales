@@ -42,7 +42,6 @@ describe "Test de Autos" {
     auto4.serImpactado(auto4)
     assert.notThat(nivel.elementos().contains(auto4))
     assert.that(game.hasVisual(auto3))
-    //assert.that(game.hasVisual(AutoChocado))
   }
   test "El auto4 al ser impactado desaparece de la lista de elementos y se muestra " {
     self.agregarAutos()

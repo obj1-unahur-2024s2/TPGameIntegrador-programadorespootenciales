@@ -41,8 +41,8 @@ describe "Test del Player" {
   test "La velocidad inicial del jugador (player) es de 20" {
     assert.equals(20, player.velocidad())
   }
-  test "Inicialmente el jugador(player) tiene 90 litros de combustible" {
-    assert.equals(90, player.combustible())
+  test "Inicialmente el jugador(player) tiene 40 litros de combustible" {
+    assert.equals(40, player.combustible())
   }
   test "El estado inicial del jugador (player) es de 100 puntos" {
     assert.equals(100, player.estado())

@@ -5,7 +5,7 @@ object player {
 	var image = "autoPlayer.png"
 	var position = new Position(x = 7, y = 1)
 	var velocidad = 20
-	var combustible = 90
+	var combustible = 40
 	var estado = 100
 	var autosQueChoco = 0
 	
@@ -19,9 +19,9 @@ object player {
 		combustible = 0.max(combustible - 1)
 		self.combustibleEnCero()
 	}
-	method combustibleEnCero() = if (combustible == 0) nivel.perdiste()
-	method llegasteALaMeta() = if(nivel.distancia() == 0) nivel.ganaste()
-	method velocidadRelativa() = 10.min(300 - (velocidad/2))
+	method combustibleEnCero() = if (combustible == 0) nivel.resultado(mensajePerdiste)
+	method llegasteALaMeta() = if(nivel.distancia() == 0) nivel.resultado(mensajeGanaste) 
+	method velocidadRelativa() = 10.min(300 - (velocidad * 0.5))
 
 	method image() = image
 	method cambiarImagen(imagenNueva){ image  = imagenNueva }
@@ -105,7 +105,7 @@ object player {
 		}
 		self.estadoEsCero()
 	}
-	method estadoEsCero() = if (estado == 0) nivel.perdiste() 
+	method estadoEsCero() = if (estado == 0) nivel.resultado(mensajePerdiste) 
 	method actualizaEstado(){estado = 0.max(estado - 10)}
 }
 

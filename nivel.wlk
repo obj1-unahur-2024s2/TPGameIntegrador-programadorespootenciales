@@ -45,9 +45,8 @@ object nivel {
    method configurate(){
 		const ancho = game.width() 
 		const largo = game.height()
-		const duracion = 2000
+		const duracion = 25000
 	
-    //	VISUALES
 	    game.addVisualCharacter(player)
 		self.agregarTablero()
 		self.agregarAutoCada(velocidadNivel)
@@ -56,7 +55,7 @@ object nivel {
 	}
 
 	method informarResultado() {
-		if (distanciaNivel == 0 && player.estado() > 0 && player.combustible() > 0)	self.ganaste() else {self.perdisteTiempoAgotado()}
+		if (distanciaNivel == 0 && player.estado() > 0 && player.combustible() > 0)	self.resultado(mensajeGanaste)  else {self.resultado(mensajeTiempoAgotado)}
 	}
 	method distancia() = distanciaNivel
 
@@ -68,11 +67,11 @@ object nivel {
 		game.addVisual(new ScoreColisiones())
 	}
 	method agregarAutoCada(unTiempo){
-		game.onTick(tiempo, "agrego", {self.agregoElemento([new Auto1(), new Auto2(), new Auto3(), new Auto4()].anyOne())})
+		game.onTick(unTiempo, "agrego", {self.agregoElemento([new Auto1(), new Auto2(), new Auto3(), new Auto4()].anyOne())})
 	}
 
 	method actulizarDistanciaPorRecorrerSegunVelocidadCada(unTiempo){
-		game.onTick(tiempo, "tiempo", {
+		game.onTick(unTiempo, "tiempo", {
 			player.llegasteALaMeta()
 			distanciaNivel = 0.max(distanciaNivel - player.velocidad())
 		})
@@ -84,70 +83,76 @@ object nivel {
 	method actualizoVelocidadDe(unaVelocidad, unAuto){
 		unAuto.cambioVelocidad(unaVelocidad)
 	}
-	
-	method ganaste(){
-		game.addVisual(mensajeGanaste)
-		game.stop()
-    }
 
-	method perdiste(){
-	    game.addVisual(mensajePerdiste)
+	method resultado(unMensaje) {
+		game.addVisual(unMensaje)
+		game.onTick(2500, "quitar", {self.quitar(unMensaje)})
+	}
+	method quitar(unMensaje){
+		game.removeVisual(unMensaje)
 		game.stop()
-    }
-	method perdisteTiempoAgotado() = mensajeTiempoAgotado
+	}
 	method cantidadDeAutosChocados() = if (self.autosChocado().isEmpty()) 0 else self.autosChocado().size()
 
 }
+object paleta {
+	const property verde = "00FF00FF"
+	const property rojo = "FF0000FF"
+	const property azul = "0000FFFF"
+	const property blanco = "FFFFFFFF"
 
+}
 class Score{
-	method textColor() = "FFFFFFFF"
+	method textColor() = paleta.blanco()
 	method text()
+	method position() = game.at(13, 9)
 }
 class ScoreVelocidad inherits Score{
-	method position() = game.at(13,9)
 	override method text() = "VELOCIDAD: " + player.velocidad().toString()
 }
 
 class ScoreDistancia inherits Score{
-	method position() = game.at(13,8)
+	override method position() = super().down(1)
 	override method text() = "DISTANCIA: " + nivel.distancia().toString()
 }
 
 class ScoreCombustible inherits Score{
-	method position() = game.at(13,7)
+	override method position() = super().down(2)
 	override method text() = "COMBUSTIBLE: " + player.combustible().toString()
 }
 
 class ScoreEstado inherits Score{
-	method position() = game.at(13,6)
+	override method position() = super().down(3)
 	override method text() = "ESTADO: " + player.estado().toString()
 }
 class ScoreColisiones inherits Score{
-	method position() = game.at(13,5)
-	override method text() = "Colisiones: " + nivel.cantidadDeAutosChocados().toString()
+	override method position() = super().down(4)
+	override method text() = "COLISIONES: " + nivel.cantidadDeAutosChocados().toString()
 }
 
 class Mensaje{
-   method textColor() = "0000FFFF"
+   method textColor() = paleta.azul()
    method position() = game.center()
    method text()
    method serImpactado(unAuto) {}
 }
 object mensajePerdiste inherits Mensaje{
 	override method text() = "LO SIENTO!! VOLVÉ A INTENTARLO"
+	override method textColor() = paleta.rojo()
 }
 object mensajeTiempoAgotado inherits Mensaje{
-	override method text() = "Tiempo agotado, perdiste! VOLVÉ A INTENTARLO"
+	override method text() = "Tiempo agotado, perdiste!"
 }
 
 object mensajeGanaste inherits Mensaje{
 	override method text() = "FELICITACIONES!! SUPERASTE EL NIVEL"
+	override method textColor() = paleta.verde()
 }
 
 object mensajeFin inherits Mensaje{
 	override method text() = "JUEGO FINALIZADO"
+	override method textColor() = paleta.blanco()
 }
-
 object inicio {
 	var image = "presentacion.png"
 	var position = game.origin()
