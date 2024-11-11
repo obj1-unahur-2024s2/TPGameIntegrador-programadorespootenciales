@@ -6,13 +6,24 @@
 - FAJARDO, MARÍA EUGENIA
 
 ## Capturas
-<img src="assets/portadaGame.png" />
-<img src="assets/pantallaNivelGame_1.png" />
-<img src="assets/pantallaNivelGame_2.png" />
-<img src="assets/pantallaNivelGame_3.png" />
-<img src="assets/pantallaNivelGame_4.png" />
-<img src="assets/pantallaNivelGame_5.png" />
-<img src="assets/pantallaNivelGame_6.png" />
+<style>
+    .contenedor-imagenes {
+    display: flex;
+    }
+
+    .contenedor-imagenes img:first-child {
+    margin-right: 10px;
+    }
+</style>
+<div class="contenedor-imagenes" >
+    <img src="assets/portadaGame.png" />
+    <img src="assets/pantallaNivelGame_1.png" />
+    <img src="assets/pantallaNivelGame_2.png" />
+    <img src="assets/pantallaNivelGame_3.png" />
+    <img src="assets/pantallaNivelGame_4.png" />
+    <img src="assets/pantallaNivelGame_5.png" />
+    <img src="assets/pantallaNivelGame_6.png" />
+</div>
 
 ## Reglas de Juego / Instrucciones
 
