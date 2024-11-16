@@ -11,6 +11,7 @@ object player {
 	
 	method velocidad() = velocidad
 	method combustible() = combustible
+	method combustible(unCombustible) {combustible = unCombustible}
 	method estado() = estado
 	method initialize(){
 		game.onTick(1000, "tiempo", {self.gastaCombustible() self.validarEstado()})
@@ -19,8 +20,8 @@ object player {
 		combustible = 0.max(combustible - 1)
 		self.combustibleEnCero()
 	}
-	method combustibleEnCero() = if (combustible == 0) nivel.resultado(mensajePerdiste)
-	method llegasteALaMeta() = if(nivel.distancia() == 0) nivel.resultado(mensajeGanaste) 
+	method combustibleEnCero() = if (combustible == 0) {nivel.resultado(mensajePerdiste) nivel.finNivel()}
+	method llegasteALaMeta() = if(nivel.distancia() == 0) {nivel.resultado(mensajeGanaste) nivel.finNivel()}
 	method velocidadRelativa() = 10.min(300 - (velocidad * 0.5))
 
 	method image() = image
@@ -56,11 +57,11 @@ object player {
 		game.onCollideDo(self, { auto => self.serImpactado(auto) })
 	}
 	method serImpactado(unAuto) {
-		game.say(self,"Cuidado gil !!")
 		self.contarColisiones()
-		self.actualizaEstado()
 		self.detenerse()
-		nivel.actualizoVelocidadDe(self.velocidadRelativa(), unAuto)	
+		estado = 0.max(estado - 10)
+		self.actualizaEstado()
+		nivel.actualizoVelocidades(self.velocidadRelativa())
 		game.schedule(500, {self.vuelvoOrigen()})
 
 	}
@@ -105,7 +106,7 @@ object player {
 		}
 		self.estadoEsCero()
 	}
-	method estadoEsCero() = if (estado == 0) nivel.resultado(mensajePerdiste) 
+	method estadoEsCero() = if (estado == 0) {nivel.resultado(mensajePerdiste) nivel.finNivel()}
 	method actualizaEstado(){estado = 0.max(estado - 10)}
 }
 

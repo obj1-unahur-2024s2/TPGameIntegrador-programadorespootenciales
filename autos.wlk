@@ -16,7 +16,6 @@ class Auto{
 
 	method desplazarse(){
 		if(!self.hayEncuentro()) self.position(position.down(1)) else 
-		//game.onCollideDo(self, {elemento => elemento.serImpactado(self)})
 		game.onCollideDo(self, { player => self.serImpactado(self) });
         if (self.llegue()) {
 			nivel.borrarElemento(self)
@@ -30,7 +29,7 @@ class Auto{
 	method image()
 
 	method serImpactado(unAuto) {
-		//game.say(unAuto,"Cuidado gil !!")  --revisar o quitar
+		player.serImpactado(self)
 		const pos = unAuto.position()
 		const autoChocado = new AutoChocado(position = pos) 
 		nivel.borrarElemento(unAuto)

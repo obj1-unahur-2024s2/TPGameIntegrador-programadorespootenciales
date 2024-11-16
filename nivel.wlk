@@ -23,8 +23,10 @@ object juego {
 
 }
 object nivel {
+   var nivel = 1
    var distanciaNivel = 2000
-   const velocidadNivel = 2000
+   var velocidadNivel = 2000
+   var activo = true
    const tiempo = 1000
    const property elementos = []
    const property autosChocado = []
@@ -33,6 +35,7 @@ object nivel {
 		elementos.add(unElemento)
 		game.addVisual(unElemento)
    }
+
    method mostrarAutoChocado(unAuto) {
 		autosChocado.add(unAuto)
 		game.addVisual(unAuto)
@@ -45,19 +48,45 @@ object nivel {
    method configurate(){
 		const ancho = game.width() 
 		const largo = game.height()
-		const duracion = 25000
+		const duracion = 30000
 	
 	    game.addVisualCharacter(player)
+
 		self.agregarTablero()
 		self.agregarAutoCada(velocidadNivel)
-		self.actulizarDistanciaPorRecorrerSegunVelocidadCada(tiempo)
+		self.actualizarDistanciaPorRecorrerSegunVelocidadCada(tiempo)
 		game.schedule(duracion, {self.informarResultado()})
 	}
 
 	method informarResultado() {
-		if (distanciaNivel == 0 && player.estado() > 0 && player.combustible() > 0)	self.resultado(mensajeGanaste)  else {self.resultado(mensajeTiempoAgotado)}
+		if (activo){self.resultado(mensajeTiempoAgotado) self.fin()}
+		elementos.forEach({auto => self.borrarElemento(auto)})
+		activo = true
+	}
+
+	method finNivel(){
+		activo = false
+		elementos.forEach({auto => self.borrarElemento(auto)})
+		if (nivel == 1) {
+			self.iniciarNivel2()
+		}
+		else {
+			self.fin()
+		}
 	}
 	method distancia() = distanciaNivel
+
+	method iniciarNivel2() {
+		const duracion = 30000
+		nivel = 2
+		game.schedule(1500, {self.resultado(mensajeNivel)})
+		game.schedule(1500,{
+		distanciaNivel = 2500
+		velocidadNivel = 1500
+		player.combustible(40)
+		})
+		game.schedule(duracion, {self.informarResultado()})
+	}
 
 	method agregarTablero(){
 		game.addVisual(new ScoreVelocidad())
@@ -66,15 +95,23 @@ object nivel {
 		game.addVisual(new ScoreEstado())
 		game.addVisual(new ScoreColisiones())
 	}
+
+	method fin(){
+		game.stop()
+	}
+	
 	method agregarAutoCada(unTiempo){
 		game.onTick(unTiempo, "agrego", {self.agregoElemento([new Auto1(), new Auto2(), new Auto3(), new Auto4()].anyOne())})
 	}
 
-	method actulizarDistanciaPorRecorrerSegunVelocidadCada(unTiempo){
-		game.onTick(unTiempo, "tiempo", {
-			player.llegasteALaMeta()
-			distanciaNivel = 0.max(distanciaNivel - player.velocidad())
-		})
+	method actualizarDistanciaPorRecorrerSegunVelocidadCada(unTiempo){
+		game.onTick(unTiempo, "tiempo", {self.validacion()})
+	}
+
+	method validacion(){
+		if (activo) {
+      		distanciaNivel = 0.max(distanciaNivel - player.velocidad())
+			player.llegasteALaMeta()}
 	}
 
 	method actualizoVelocidades(unaVelocidad){
@@ -86,11 +123,10 @@ object nivel {
 
 	method resultado(unMensaje) {
 		game.addVisual(unMensaje)
-		game.onTick(2500, "quitar", {self.quitar(unMensaje)})
+		game.schedule(1500, {self.quitar(unMensaje)})
 	}
 	method quitar(unMensaje){
 		game.removeVisual(unMensaje)
-		game.stop()
 	}
 	method cantidadDeAutosChocados() = if (self.autosChocado().isEmpty()) 0 else self.autosChocado().size()
 
@@ -151,6 +187,11 @@ object mensajeGanaste inherits Mensaje{
 
 object mensajeFin inherits Mensaje{
 	override method text() = "JUEGO FINALIZADO"
+	override method textColor() = paleta.blanco()
+}
+
+object mensajeNivel inherits Mensaje{
+	override method text() = "COMIENZA NIVEL 2"
 	override method textColor() = paleta.blanco()
 }
 object inicio {
