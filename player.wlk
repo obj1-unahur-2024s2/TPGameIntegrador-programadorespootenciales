@@ -106,7 +106,7 @@ object player {
 		}
 		self.estadoEsCero()
 	}
-	method estadoEsCero() = if (estado == 0) {nivel.resultado(mensajePerdiste) nivel.finNivel()}
+	method estadoEsCero() {if (estado == 0) {nivel.resultado(mensajePerdiste) nivel.finNivel()}}
 	method actualizaEstado(){estado = 0.max(estado - 10)}
 }
 
