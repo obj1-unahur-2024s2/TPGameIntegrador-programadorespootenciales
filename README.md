@@ -36,6 +36,6 @@ Cosas a tener en cuenta:
 ## Otros
 
 - UNAHUR - Instituto de Tecnología e Ingeniería
-- Versión de wollok: 0.2.7
+- Versión de wollok: 0.2.11
 - Una vez terminado, queremos manternerlo privado.
 <link rel="stylesheet" href="styles/styles.css">
