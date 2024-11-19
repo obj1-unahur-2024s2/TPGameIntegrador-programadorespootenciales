@@ -20,8 +20,8 @@ object player {
 		combustible = 0.max(combustible - 1)
 		self.combustibleEnCero()
 	}
-	method combustibleEnCero() = if (combustible == 0) {nivel.resultado(mensajePerdiste) nivel.finNivel()}
-	method llegasteALaMeta() = if(nivel.distancia() == 0) {nivel.resultado(mensajeGanaste) nivel.finNivel()}
+	method combustibleEnCero() { if (combustible == 0) {nivel.resultado(mensajePerdiste) nivel.finNivel()}}
+	method llegasteALaMeta() {if(nivel.distancia() == 0) {nivel.resultado(mensajeGanaste) nivel.finNivel()}}
 	method velocidadRelativa() = 10.min(300 - (velocidad * 0.5))
 
 	method image() = image
