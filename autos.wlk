@@ -3,25 +3,38 @@ import nivel.*
 import player.*
 
 class Auto{
-	var property position = new Position(x = [4,7,10].anyOne(), y = 9)
+	var property position = new Position(x = 7, y = 5)
+	var direccion = ["I","C","D"].anyOne()
 
 	method initialize(){
-	   game.onTick(player.velocidadRelativa(), "velocidad", {self.desplazarse()})
-	}
-
-	method cambioVelocidad(unaVelocidad){
-		game.removeTickEvent("velocidad")
-		game.onTick(unaVelocidad, "velocidad", {self.desplazarse()})
+	   game.onTick(1000, "velocidad", {self.desplazarse()})
 	}
 
 	method desplazarse(){
-		if(!self.hayEncuentro()) self.position(position.down(1)) else 
-		game.onCollideDo(self, { player => self.serImpactado(self) });
+		if(!self.hayEncuentro()) {
+			self.position(position.down(1))
+			if (direccion == "I"){
+				self.position(position.left(1))
+			   }
+			   
+               if(direccion == "D"){
+				self.position(position.right(1))
+			   }
+			}
+
         if (self.llegue()) {
 			nivel.borrarElemento(self)
 			game.schedule(1000, {game.removeVisual(self)})
+			game.schedule(2000, {self.reinicio(6) })
 		}
 		
+	}
+
+	method reinicio(arriba){
+		direccion = ["I","C","D"].anyOne()
+		self.position(position.up(arriba))
+		position = game.center()
+		nivel.agregoElemento(self)
 	}
 	method hayEncuentro() = self.position() == player.position()
 	method llegue() = position.y() == 0
@@ -29,16 +42,21 @@ class Auto{
 	method image()
 
 	method serImpactado(unAuto) {
-		player.serImpactado(self)
-		const pos = unAuto.position()
-		const autoChocado = new AutoChocado(position = pos) 
-		nivel.borrarElemento(unAuto)
-		game.removeVisual(unAuto)
-		self.actualizarAuto(autoChocado)
 
+	}
+
+	method colisionar(){
+		//player.serImpactado(self)
+		const pos = self.position()
+		const autoChocado = new AutoChocado(position = pos) 
+		nivel.borrarElemento(self)
+		game.removeVisual(self)
+		self.actualizarAuto(autoChocado)
+        game.schedule(2000, {self.reinicio(5) })
 	}
 	method actualizarAuto(unAutoChocado){
 		nivel.mostrarAutoChocado(unAutoChocado)
+		game.schedule(500,{game.removeVisual(unAutoChocado)})
 	}
 }
 class Auto1 inherits Auto {

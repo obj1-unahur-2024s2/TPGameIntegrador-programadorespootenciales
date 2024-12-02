@@ -1,6 +1,9 @@
 import wollok.game.*
 import nivel.*
+import gameManager.*
 
 program CarGame {
-	juego.iniciar()
+	gameManager.inicializar()
+	gameManager.mostrarMenu()
+	game.start()
 }
