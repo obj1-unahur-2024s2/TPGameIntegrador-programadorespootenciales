@@ -1,3 +1,4 @@
+import gameManager.*
 import wollok.game.*
 import player.*
 import autos.*
@@ -12,36 +13,18 @@ object juego {
 	}
 	method pausarJuego(){
 		keyboard.space().onPressDo({
-			self.detenerMusica(music1)  
+			gameManager.detenerMusica(music1)
 			game.addVisual(mensajeFin)
 			game.onTick(1000, "pausar", {game.stop()})
 		})
 			
 	}
-	method reiniciarJuego(){
-		keyboard.r().onPressDo({ self.restart() })
-	}
-	method detenerMusica(unaMusica){
-	   unaMusica.volume(0)
-       unaMusica.stop()
-	}
-	method bajarMusica(unaMusica){
-		keyboard.minusKey().onPressDo({unaMusica.volume(0.5)})
-	}
-	method subirMusica(unaMusica){
-		keyboard.plusKey().onPressDo({unaMusica.volume(1)})
-	}
-	
 	method iniciarJuego(){
-		player.configurarFlechas()
+		if(self.music1().volume() == 0){self.music1().volume(0.5)}
+		player.configurarTeclas()
 		self.pausarJuego()
 		nivel.iniciarNivel1()
-		music1.shouldLoop(true)
-		game.schedule(500, { music1.play()})
-	}
-	method restart() {
-		game.clear()
-		self.iniciarJuego()
+		game.schedule(500, {gameManager.reproducirMusica(music1)})
 	}
 
 }
@@ -92,8 +75,8 @@ object nivel {
 			self.iniciarNivel2()
 		}
 		else {
-			juego.detenerMusica(musica)
-			game.onTick(1000, "finNivel", {self.fin()})
+			gameManager.detenerMusica(musica)
+			game.onTick(500, "finNivel", {self.fin()})
 		}
 	}
 	method distancia() = distanciaNivel
@@ -103,13 +86,13 @@ object nivel {
 		tiempoRestante = duracion / 1000
 		nivel = 2
 		game.schedule(1500, {self.resultado(mensajeNivel, nivel2)
-		game.schedule(1500,{
-		distanciaNivel = 2500
-		velocidadNivel = 1500
-		player.combustible(60)
-		nivelActivo = true
-		game.addVisual(player)
-		})
+			game.schedule(1500,{
+			distanciaNivel = 2500
+			velocidadNivel = 1500
+			player.combustible(60)
+			nivelActivo = true
+			game.addVisual(player)
+			})
 		})
 	}
 
@@ -122,10 +105,14 @@ object nivel {
 		game.addVisual(new ScoreEstado())
 		game.addVisual(new ScoreColisiones())
 		game.addVisual(new TiempoRestante())
+		game.addVisual(sonido)
+		
 	}
 
 	method fin(){
-		game.stop()
+		
+		game.onTick(5000, "terminar", {game.stop()} )
+		
 	}
 	
 	method agregarAutoCada(unTiempo){
@@ -182,21 +169,21 @@ object nivel {
 
 }
 object gameOver{
-	var image = "gameOver.png"
-	var position = game.center()
-	method position() = position
+	const image = "gameOver.png"
+	const position = game.center()
+	method position() = position.right(1)
 	method image() = image
 }
 object ganaste{
-	var image = "ganasteImagen.png"
-	var position = game.center()
-	method position() = position
+	const image = "ganasteImagen.png"
+	const position = game.center()
+	method position() = position.down(1)
 	method image() = image
 }
 
 object nivel2{
-	var image = "nivel2.png"
-	var position = game.center()
+	const image = "nivel2.png"
+	const position = game.center()
 	method position() = position
 	method image() = image
 }
@@ -236,7 +223,6 @@ class TiempoRestante inherits Score{
 	override method text() = "TIEMPO: " + nivel.tiempoRestante().toString()
 }
 
-
 class ScoreDistancia inherits Score{
 	override method position() = game.at(1, 8)
 	override method text() = "DISTANCIA: " + nivel.distancia().toString()
@@ -270,9 +256,13 @@ object mensajeNivel inherits Mensaje{
 	override method textColor() = paleta.blanco()
 }
 object inicio {
-	var image = "presentacion.png"
-	var position = game.origin()
-	method position() = position
-	method image() = image
+	const property image = "presentacion.png"
+	const property position = game.origin()
+}
+object sonido{
+	method image() = "sonido.png"
+	method position() = game.center().up(4)
+	method text() = "B: Bajar			S: Subir"
+	
 }
 

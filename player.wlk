@@ -1,5 +1,6 @@
 import wollok.game.*
 import nivel.*
+import gameManager.*
 
 object player {
 	var image = "autoPlayer.png"
@@ -65,7 +66,7 @@ object player {
 		game.addVisual(self)
 	}
 
-	method configurarFlechas(){
+	method configurarTeclas(){
 		keyboard.up().onPressDo {
 			self.acelerar()
 		}
@@ -81,8 +82,17 @@ object player {
 		keyboard.right().onPressDo{ 
 			self.mover(derecha)
 		}
-   }
-
+		keyboard.r().onPressDo{
+			gameManager.restart()
+		} 
+		keyboard.b().onPressDo{
+			juego.music1().volume(0).between(0, 0.5)
+		}
+		keyboard.s().onPressDo{
+			juego.music1().volume(1)
+		}
+   	}
+	
 	method mover(direccion){
 		const nuevaPosicion = direccion.siguiente(self.position())
 		if (nuevaPosicion.x() < self.position().x() && nuevaPosicion.x() >= 1) {
