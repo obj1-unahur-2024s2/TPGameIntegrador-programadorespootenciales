@@ -5,6 +5,7 @@ import player.*
 class Auto{
 	var property position = new Position(x = 7, y = 5)
 	var direccion = ["I","C","D"].anyOne()
+	const autoChocado = new AutoChocado()
 
 	method initialize(){
 	   game.onTick(1000, "velocidad", {self.desplazarse()})
@@ -23,39 +24,40 @@ class Auto{
 			}
 
         if (self.llegue()) {
-			nivel.borrarElemento(self)
+			//nivel.borrarElemento(self)
 			game.schedule(1000, {game.removeVisual(self)})
-			game.schedule(2000, {self.reinicio(6) })
+			game.schedule(2000, {self.reinicio() })
 		}
 		
 	}
 
-	method reinicio(arriba){
+	method reinicio(){
 		direccion = ["I","C","D"].anyOne()
-		self.position(position.up(arriba))
+		//self.position(position.up(arriba))
 		position = game.center()
-		nivel.agregoElemento(self)
+		game.addVisual(self)
+		//nivel.agregoElemento(self)
 	}
 	method hayEncuentro() = self.position() == player.position()
 	method llegue() = position.y() == 0
 
 	method image()
 
-	method serImpactado(unAuto) {
-
-	}
+	method serImpactado(unAuto) {	}
 
 	method colisionar(){
 		//player.serImpactado(self)
 		const pos = self.position()
-		const autoChocado = new AutoChocado(position = pos) 
-		nivel.borrarElemento(self)
+		//const autoChocado = new AutoChocado(position = pos) 
+		autoChocado.position(pos)
+		//nivel.borrarElemento(self)
 		game.removeVisual(self)
 		self.actualizarAuto(autoChocado)
-        game.schedule(2000, {self.reinicio(5) })
+        game.schedule(2000, {self.reinicio()})
 	}
 	method actualizarAuto(unAutoChocado){
-		nivel.mostrarAutoChocado(unAutoChocado)
+		game.addVisual(unAutoChocado)
+		//nivel.mostrarAutoChocado(unAutoChocado)
 		game.schedule(500,{game.removeVisual(unAutoChocado)})
 	}
 }
@@ -75,5 +77,5 @@ class Auto4 inherits Auto {
 }
 class AutoChocado inherits Auto {
 	override method image() = "unAutoConHumo.png"
-	override method desplazarse(){game.removeVisual(self)}
+	override method desplazarse(){}
 }

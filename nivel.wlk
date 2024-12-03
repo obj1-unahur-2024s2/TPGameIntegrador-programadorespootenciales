@@ -9,10 +9,6 @@ object juego {
 		game.title("Autos")
 		game.height(10)
 		game.width(15)
-		//game.boardGround("fondo.gif")
-		//player.configurarFlechas()
-		//self.pausarJuego()
-		//self.iniciarJuego()
 	}
 	method pausarJuego(){
 		keyboard.space().onPressDo({self.detenerMusica(music1) game.stop() game.addVisual(mensajeFin)})
@@ -50,7 +46,6 @@ object nivel {
    var velocidadNivel = 2000
    var property duracion = 0
    var property tiempoRestante = 1
-   const tiempo = 1000
    const property elementos = []
    var property nivelActivo = false
    var ganoNivel = false
@@ -65,8 +60,9 @@ object nivel {
    }
 
    method borrarElemento(unElemento) {
-	    game.removeVisual(unElemento)
+	
 		elementos.remove(unElemento)
+	    game.removeVisual(unElemento)
    }
 
    method iniciarNivel1(){
@@ -80,12 +76,11 @@ object nivel {
 		self.agregarTablero()
 		nivelActivo = true
 		game.onCollideDo(player, { unAuto => player.serImpactado(unAuto) });
-		self.agregarAutoCada(3000)
-		self.actualizarDatosCada(tiempo)
+		self.agregarAutoCada(4500)
+		self.actualizarDatosCada()
 	}
 
 	method finNivel(){
-		elementos.forEach({auto => self.borrarElemento(auto)})
 		if (nivel == 1 and ganoNivel) {
 			ganoNivel = false
 			self.iniciarNivel2()
@@ -100,12 +95,13 @@ object nivel {
 		duracion = 30000
 		tiempoRestante = duracion / 1000
 		nivel = 2
-		game.schedule(1500, {self.resultado(mensajeNivel, "nivel2.png")
+		game.schedule(1500, {self.resultado(mensajeNivel, nivel2)
 		game.schedule(1500,{
 		distanciaNivel = 2500
 		velocidadNivel = 1500
 		player.combustible(60)
 		nivelActivo = true
+		game.addVisual(player)
 		})
 		})
 	}
@@ -136,8 +132,8 @@ object nivel {
 		self.agregoElemento(unAuto)
 	}
 
-	method actualizarDatosCada(unTiempo){
-		game.onTick(unTiempo, "tiempo2", {self.validacion()})
+	method actualizarDatosCada(){
+		game.onTick(1000, "tiempo2", {self.validacion()})
 	}
 
 	method validacion(){
@@ -148,23 +144,21 @@ object nivel {
 			
 		if (player.combustibleEnCero()){
 		    nivelActivo = false
-			self.resultado(mensajePerdiste, gameOver.image()) 
+			self.resultado(mensajePerdiste, gameOver) 
 			self.finNivel()
 		}
 
 		if (distanciaNivel == 0){
 		    nivelActivo = false
-			self.resultado(mensajeGanaste, ganaste.image()) 
-			//distanciaNivel = 1
+			game.removeVisual(player)
+			self.resultado(mensajeGanaste,ganaste)
 			ganoNivel = true
 			self.finNivel()
 		}
 
 		if(tiempoRestante==0){
 		    nivelActivo = false
-			game.addVisual("gameOver.png")
-			self.resultado(mensajeTiempoAgotado, gameOver.image()) 
-			//tiempoRestante = 1
+			self.resultado(mensajeTiempoAgotado, gameOver) 
 			self.finNivel()
 		}
 		}
@@ -172,8 +166,8 @@ object nivel {
 
 	method resultado(unMensaje, unaImagen) {
 		game.addVisual(unaImagen)
-		game.addVisual(unMensaje)
-		game.schedule(1500, {self.quitar(unMensaje)})
+		//game.addVisual(unMensaje)
+		game.schedule(1500, {self.quitar(unaImagen)})
 	}
 	method quitar(unMensaje){
 		game.removeVisual(unMensaje)
@@ -182,13 +176,20 @@ object nivel {
 }
 object gameOver{
 	var image = "gameOver.png"
-	var position = game.origin()
+	var position = game.center()
 	method position() = position
 	method image() = image
 }
 object ganaste{
-	var image = "ganasteImage.png"
-	var position = game.origin()
+	var image = "ganasteImagen.png"
+	var position = game.center()
+	method position() = position
+	method image() = image
+}
+
+object nivel2{
+	var image = "nivel2.png"
+	var position = game.center()
 	method position() = position
 	method image() = image
 }

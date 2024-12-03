@@ -55,12 +55,14 @@ object player {
 		estado = 0.max(estado - 10)
 		self.actualizaEstado()
 		unAuto.colisionar()
-		game.schedule(1000, {self.vuelvoOrigen()})
+		game.removeVisual(self)
+		game.schedule(2000, {self.vuelvoOrigen()})
 
 	}
 	method detenerse(){velocidad = 0}
 	method vuelvoOrigen() {
 		position = game.at(7,1)
+		game.addVisual(self)
 	}
 
 	method configurarFlechas(){
