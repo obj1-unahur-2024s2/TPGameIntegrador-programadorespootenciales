@@ -19,7 +19,7 @@ import nivel.*
    method mostrarMenu() {
       self.configurarTeclasVolumen()
       if(self.musicIntro().volume() == 0){self.musicIntro().volume(0.5)}
-      game.onTick(500, "musicaDeIntro", {self.musicaIntro()})
+      game.schedule(500, {self.musicaIntro()})
       game.addVisual(home)
       keyboard.enter().onPressDo {  
          self.detenerMusica(musicIntro)
