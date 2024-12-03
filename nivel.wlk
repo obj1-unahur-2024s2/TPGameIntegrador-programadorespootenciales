@@ -3,7 +3,7 @@ import player.*
 import autos.*
 
 object juego {
-	const music1 = game.sound("music.mp3")
+	const property music1 = game.sound("music.mp3")
 
 	method iniciar(){		
 		game.title("Autos")
@@ -11,7 +11,12 @@ object juego {
 		game.width(15)
 	}
 	method pausarJuego(){
-		keyboard.space().onPressDo({self.detenerMusica(music1) game.stop() game.addVisual(mensajeFin)})
+		keyboard.space().onPressDo({
+			self.detenerMusica(music1)  
+			game.addVisual(mensajeFin)
+			game.onTick(1000, "pausar", {game.stop()})
+		})
+			
 	}
 	method reiniciarJuego(){
 		keyboard.r().onPressDo({ self.restart() })
@@ -81,12 +86,14 @@ object nivel {
 	}
 
 	method finNivel(){
+		const musica = juego.music1()
 		if (nivel == 1 and ganoNivel) {
 			ganoNivel = false
 			self.iniciarNivel2()
 		}
 		else {
-			self.fin()
+			juego.detenerMusica(musica)
+			game.onTick(1000, "finNivel", {self.fin()})
 		}
 	}
 	method distancia() = distanciaNivel
