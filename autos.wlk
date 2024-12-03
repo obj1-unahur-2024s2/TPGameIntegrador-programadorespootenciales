@@ -24,7 +24,7 @@ class Auto{
 			}
 
         if (self.llegue()) {
-			//nivel.borrarElemento(self)
+			
 			game.schedule(1000, {game.removeVisual(self)})
 			game.schedule(2000, {self.reinicio() })
 		}
@@ -33,10 +33,10 @@ class Auto{
 
 	method reinicio(){
 		direccion = ["I","C","D"].anyOne()
-		//self.position(position.up(arriba))
+		
 		position = game.center()
 		game.addVisual(self)
-		//nivel.agregoElemento(self)
+		
 	}
 	method hayEncuentro() = self.position() == player.position()
 	method llegue() = position.y() == 0
@@ -46,20 +46,22 @@ class Auto{
 	method serImpactado(unAuto) {	}
 
 	method colisionar(){
-		//player.serImpactado(self)
+		
 		const pos = self.position()
-		//const autoChocado = new AutoChocado(position = pos) 
+		
 		autoChocado.position(pos)
-		//nivel.borrarElemento(self)
+		
 		game.removeVisual(self)
 		self.actualizarAuto(autoChocado)
         game.schedule(2000, {self.reinicio()})
 	}
 	method actualizarAuto(unAutoChocado){
 		game.addVisual(unAutoChocado)
-		//nivel.mostrarAutoChocado(unAutoChocado)
+		
 		game.schedule(500,{game.removeVisual(unAutoChocado)})
+		
 	}
+	method position() = position
 }
 class Auto1 inherits Auto {
 	override method image() = "auto1.png"

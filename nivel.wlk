@@ -262,7 +262,7 @@ object inicio {
 object sonido{
 	method image() = "sonido.png"
 	method position() = game.center().up(4)
-	method text() = "B: Bajar			S: Subir"
+	method text() = "B: Bajar			           S: Subir"
 	
 }
 

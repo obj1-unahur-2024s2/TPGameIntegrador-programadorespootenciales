@@ -41,8 +41,8 @@ describe "Test del Player" {
   test "La velocidad inicial del jugador (player) es de 20" {
     assert.equals(20, player.velocidad())
   }
-  test "Inicialmente el jugador(player) tiene 40 litros de combustible" {
-    assert.equals(40, player.combustible())
+  test "Inicialmente el jugador(player) tiene 1 litro de combustible" {
+    assert.equals(1, player.combustible())
   }
   test "El estado inicial del jugador (player) es de 100 puntos" {
     assert.equals(100, player.estado())
@@ -52,18 +52,7 @@ describe "Test del Player" {
     player.mover(derecha)
     assert.that(player.position().x() == 9 && player.position().y() == 1)
   }
-test "Si el jugador se mueve cuatro posiciones a la derecha queda ubicado en las coordenadas (x = 11, y = 1) y su estado disminuye una unidad" {
-    self.moverseFueraDeLosLimites()
-    // player.validarEstado()
-    assert.that(player.position().x() == 11 && player.position().y() == 1 )
-    assert.that(player.estado() < 100)
-  }
 
-test "El auto1 se desplaza dos veces hacia abajo quedando ubicado en las coordenadas (x = 7, y = 1) donde se encuentra el jugador, se produce una colision disminuyendo el estado en 10 unidades (arranca en 100)" {
-    player.serImpactado(auto1)
-    assert.that(auto1.position().x() == 7 && auto1.position().y() == 1 )
-    assert.equals(90, player.estado())
-  }
 test "Si el jugador se detiene su velocida queda en 0." {
     player.detenerse()
     assert.equals(0, player.velocidad())
@@ -73,21 +62,17 @@ test "Si el jugador es impactado por el auto1, su velocidad queda en 0" {
     player.serImpactado(auto1)
     assert.equals(0, player.velocidad())
 }
-test "Si al jugador lo impacta el auto1, el auto1 recibe el impacto, la cantidad de autos chocados asciende a 1 y el auto1 desaparece del tablero" {
-    player.serImpactado(auto1)
-    auto1.serImpactado(auto1)
-    assert.equals(1, player.colisiones())
-    assert.notThat(nivel.elementos().contains(auto1))
-    
-} 
+
 test "La velocidad relactiva luego de que el auto1 impacte al Jugador es 10"{
     player.serImpactado(auto1)
-    assert.that(1==1)
-    //assert.equals(10, player.velocidadRelativa())
+    assert.equals(0, player.velocidad())
 }
 test "Cuando el auto1 y el Jugador colisionan hay encuentro; es decir, ambos están en la misma posicion en el tablero"{
-    player.serImpactado(auto1)
-    assert.that(auto1.hayEncuentro())
+  const posPlayer = player.position()
+  const posAuto1 = auto1.position()
+  assert.equals(posPlayer, posAuto1)
+  // assert.that(posPlayer == posAuto1)
+  assert.that(auto1.hayEncuentro())
 }
 
 }

@@ -8,13 +8,14 @@
 ## Capturas
 
 <div class="contenedor-imagenes" >
-    <img src="assets/portadaGame.png" />
-    <img src="assets/pantallaNivelGame_1.png" />
-    <img src="assets/pantallaNivelGame_2.png" />
-    <img src="assets/pantallaNivelGame_3.png" />
-    <img src="assets/pantallaNivelGame_4.png" />
-    <img src="assets/pantallaNivelGame_5.png" />
-    <img src="assets/pantallaNivelGame_6.png" />
+    <img src="assets/capturaJuego_0.jpg" />
+    <img src="assets/capturaJuego_1.jpg" />
+    <img src="assets/capturaJuego_2.jpg" />
+    <img src="assets/capturaJuego_3.jpg" />
+    <img src="assets/capturaJuego_4.jpg" />
+    <img src="assets/capturaJuego_5.jpg" />
+    <img src="assets/capturaJuego_6.jpg" />
+   
 </div>
 
 ## Reglas de Juego / Instrucciones
